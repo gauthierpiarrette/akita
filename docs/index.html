@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Akita — computing on data no one is allowed to see</title>
+<meta name="description" content="Encrypted memory and search for AI apps — the server can't read what it stores or searches. Open source, measured, honest.">
+<style>
+  :root {
+    --page: #f9f9f7; --surface: #fcfcfb; --ink: #0b0b0b; --ink2: #52514e;
+    --muted: #898781; --grid: #e1e0d9; --accent: #1c5cab; --blue: #2a78d6;
+    --good-ink: #006300; --good: #0ca30c; --ring: rgba(11,11,11,.10);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --page: #0d0d0d; --surface: #1a1a19; --ink: #fff; --ink2: #c3c2b7;
+      --muted: #898781; --grid: #2c2c2a; --accent: #6da7ec; --blue: #3987e5;
+      --good-ink: #0ca30c; --ring: rgba(255,255,255,.12);
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--page); color: var(--ink);
+    font-family: Charter, "Iowan Old Style", Palatino, Georgia, serif;
+    font-size: 17px; line-height: 1.6;
+  }
+  .mono { font-family: ui-monospace, "SF Mono", Menlo, monospace; }
+  .wrap { max-width: 62rem; margin: 0 auto; padding: 0 1.3rem; }
+
+  header {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: 1.1rem 0; border-bottom: 1px solid var(--ink);
+  }
+  .brand { font-family: "Avenir Next", Avenir, "Helvetica Neue", system-ui, sans-serif;
+    font-weight: 600; letter-spacing: .02em; font-size: 1.05rem; }
+  header nav a { color: var(--ink2); text-decoration: none; margin-left: 1.2rem;
+    font-family: "Avenir Next", Avenir, system-ui, sans-serif; font-size: .9rem; }
+  header nav a:hover { color: var(--accent); }
+
+  h1 {
+    font-family: "Avenir Next", Avenir, "Helvetica Neue", system-ui, sans-serif;
+    font-size: clamp(2rem, 5.5vw, 3.1rem); font-weight: 600;
+    line-height: 1.1; letter-spacing: -0.015em; text-wrap: balance;
+    margin: 2.6rem 0 1rem;
+  }
+  .lede { font-size: 1.16rem; color: var(--ink2); max-width: 42rem; margin: 0 0 1.6rem; }
+  .lede strong { color: var(--ink); }
+
+  .cta { display: flex; gap: .7rem; flex-wrap: wrap; align-items: center; margin-bottom: .9rem; }
+  .btn {
+    font-family: "Avenir Next", Avenir, system-ui, sans-serif; font-weight: 600;
+    font-size: .95rem; text-decoration: none; border-radius: 8px;
+    padding: .6rem 1.2rem; color: var(--page); background: var(--accent);
+  }
+  .btn.ghost { color: var(--accent); background: transparent; border: 1px solid var(--grid); }
+  .pipbox {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: .92rem;
+    background: var(--surface); border: 1px solid var(--ring); border-radius: 8px;
+    padding: .55rem .9rem; color: var(--ink);
+  }
+  .pipbox span { color: var(--muted); user-select: none; }
+
+  .status {
+    font-family: "Avenir Next", Avenir, system-ui, sans-serif; font-size: .85rem;
+    color: var(--ink2); margin-bottom: 2rem;
+  }
+  .status b { color: var(--ink); }
+
+  .shot { margin: 0 0 2.6rem; }
+  .shot img {
+    width: 100%; height: auto; display: block; border-radius: 10px;
+    border: 1px solid var(--ring); box-shadow: 0 12px 40px rgba(0,0,0,.08);
+  }
+  .shot figcaption { font-size: .85rem; color: var(--muted); padding-top: .6rem; }
+
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: .8rem; margin: 0 0 2.8rem; }
+  .tile { background: var(--surface); border: 1px solid var(--ring);
+    border-radius: 8px; padding: 1rem 1.1rem; }
+  .tile .v { font-family: "Avenir Next", Avenir, system-ui, sans-serif;
+    font-size: 1.6rem; font-weight: 600; letter-spacing: -.01em; }
+  .tile .l { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: .68rem;
+    text-transform: uppercase; letter-spacing: .07em; color: var(--muted); margin-top: .3rem; }
+
+  h2 { font-family: "Avenir Next", Avenir, system-ui, sans-serif;
+    font-size: 1.25rem; font-weight: 600; margin: 0 0 1rem; }
+  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.1rem; margin-bottom: 2.8rem; }
+  .step b { font-family: "Avenir Next", Avenir, system-ui, sans-serif; display: block; margin-bottom: .25rem; }
+  .step { font-size: .95rem; color: var(--ink2); }
+
+  .honest {
+    border-left: 3px solid var(--accent); padding: .2rem 0 .2rem 1.1rem;
+    color: var(--ink2); font-size: .95rem; margin-bottom: 2.8rem; max-width: 46rem;
+  }
+
+  footer { border-top: 1px solid var(--grid); padding: 1.4rem 0 3rem;
+    color: var(--muted); font-size: .85rem; }
+  footer a { color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <span class="brand">AKITA</span>
+    <nav>
+      <a href="https://github.com/gauthierpiarrette/akita">GitHub</a>
+      <a href="https://pypi.org/project/akita-fhe/">PyPI</a>
+      <a href="https://github.com/gauthierpiarrette/akita/blob/main/docs/why.md">Why it works</a>
+    </nav>
+  </header>
+
+  <h1>Computing on data no one is allowed to see.</h1>
+  <p class="lede">
+    Akita gives AI apps <strong>per-user memory and search the operator
+    provably cannot read</strong> — text sealed with AES-GCM, embeddings
+    encrypted with CKKS, keys that never leave the user's side. Recall is
+    fast enough to use, and every number below was measured, not promised.
+  </p>
+
+  <div class="cta">
+    <a class="btn" href="https://github.com/gauthierpiarrette/akita">View on GitHub</a>
+    <a class="btn ghost" href="https://github.com/gauthierpiarrette/akita/blob/main/docs/why.md">Read the reasoning</a>
+    <code class="pipbox"><span>$</span> pip install akita-fhe</code>
+  </div>
+  <p class="status"><b>v0.1 prototype</b> · real cryptography · honest measurements · not audited — don't protect production data with it yet.</p>
+
+  <figure class="shot">
+    <img src="demo.gif" alt="Akita demo: on the left, a user searches their memories in natural language; on the right, the operator's view shows only hex-opaque ciphertext and a badge reading 'secret key held server-side: NO'.">
+    <figcaption>The demo, live: your device on the left — the operator's entire view of you on the right.
+      Runs locally with one command; real cryptography, no mocks.</figcaption>
+  </figure>
+
+  <div class="tiles">
+    <div class="tile"><div class="v">~95 ms</div><div class="l">warm semantic recall, end to end</div></div>
+    <div class="tile"><div class="v">80/80</div><div class="l">top-10 results identical to plaintext</div></div>
+    <div class="tile"><div class="v">~$0.0002</div><div class="l">per encrypted search, measured</div></div>
+    <div class="tile"><div class="v">0</div><div class="l">secret keys held server-side</div></div>
+  </div>
+
+  <h2>How it works</h2>
+  <div class="steps">
+    <div class="step"><b>1 · Embed on-device</b> The sentence-transformer runs on the key holder's side; plaintext never leaves.</div>
+    <div class="step"><b>2 · Seal</b> Text is AES-GCM encrypted; embeddings are CKKS-encrypted (128-bit, hardened parameters).</div>
+    <div class="step"><b>3 · Blind search</b> The server multiplies ciphertexts it cannot read — one operation per segment, no rotations.</div>
+    <div class="step"><b>4 · Decrypt at the edge</b> Only the key holder decrypts scores and picks the winners.</div>
+  </div>
+
+  <div class="honest">
+    Stated plainly, because trust products should say it themselves: search
+    download scales with corpus size in v0; fetch patterns are padded with
+    decoys pending a PIR stage; key loss means memory loss. Full caveats in
+    the <a href="https://github.com/gauthierpiarrette/akita#security-notes--limitations--read-before-relying-on-this">security notes</a>.
+  </div>
+
+  <footer>
+    Apache-2.0 ·
+    <a href="https://github.com/gauthierpiarrette/akita">github.com/gauthierpiarrette/akita</a> ·
+    <a href="https://pypi.org/project/akita-fhe/">pypi.org/project/akita-fhe</a> ·
+    security reports: see <a href="https://github.com/gauthierpiarrette/akita/blob/main/SECURITY.md">SECURITY.md</a>
+  </footer>
+</div>
+</body>
+</html>
