@@ -76,9 +76,18 @@
   .pipbox {
     font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: .92rem;
     background: var(--surface); border: 1px solid var(--ring); border-radius: 8px;
-    padding: .55rem .9rem; color: var(--ink);
+    padding: .55rem .9rem; color: var(--ink); cursor: pointer;
+    display: inline-flex; align-items: center; gap: .6rem;
   }
-  .pipbox span { color: var(--muted); user-select: none; }
+  .pipbox:hover { border-color: var(--accent); }
+  .pipbox:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .pipbox > span[aria-hidden="true"]:first-child { color: var(--muted); user-select: none; }
+  .copyhint {
+    font-size: .68rem; text-transform: uppercase; letter-spacing: .07em;
+    color: var(--muted); user-select: none; border: 1px solid var(--grid);
+    border-radius: 5px; padding: .1em .45em; margin-left: .2rem;
+  }
+  .pipbox.copied .copyhint { color: var(--good-ink); border-color: var(--good-ink); }
 
   .status {
     font-family: "Avenir Next", Avenir, system-ui, sans-serif; font-size: .85rem;
@@ -147,7 +156,10 @@
   <div class="cta">
     <a class="btn" href="https://github.com/gauthierpiarrette/akita">View on GitHub</a>
     <a class="btn ghost" href="https://github.com/gauthierpiarrette/akita/blob/main/docs/why.md">Read the reasoning</a>
-    <code class="pipbox"><span>$</span> pip install akita-fhe</code>
+    <button class="pipbox" id="pip" type="button" aria-label="Copy: pip install akita-fhe">
+      <span aria-hidden="true">$</span> pip install akita-fhe
+      <span class="copyhint" id="pip-hint" aria-hidden="true">copy</span>
+    </button>
   </div>
   <p class="status"><b>v0.1 prototype</b> · real cryptography · honest measurements · not audited — don't protect production data with it yet.</p>
   <p class="forwho">For AI apps holding sensitive user data — journaling, health, coaching, companions, legal, finance.</p>
@@ -189,5 +201,37 @@
     security reports: see <a href="https://github.com/gauthierpiarrette/akita/blob/main/SECURITY.md">SECURITY.md</a>
   </footer>
 </div>
+<script>
+  (function () {
+    var btn = document.getElementById("pip");
+    var hint = document.getElementById("pip-hint");
+    if (!btn) return;
+    var reset;
+    btn.addEventListener("click", function () {
+      var cmd = "pip install akita-fhe";
+      var done = function () {
+        btn.classList.add("copied");
+        hint.textContent = "copied ✓";
+        clearTimeout(reset);
+        reset = setTimeout(function () {
+          btn.classList.remove("copied");
+          hint.textContent = "copy";
+        }, 2000);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(cmd).then(done, fallback);
+      } else {
+        fallback();
+      }
+      function fallback() {
+        var t = document.createElement("textarea");
+        t.value = cmd; t.style.position = "fixed"; t.style.opacity = "0";
+        document.body.appendChild(t); t.select();
+        try { document.execCommand("copy"); done(); } catch (e) {}
+        document.body.removeChild(t);
+      }
+    });
+  })();
+</script>
 </body>
 </html>
