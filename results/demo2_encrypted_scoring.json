@@ -1,0 +1,13 @@
+{
+  "workload": "logistic scoring, 32 features, batch 4096",
+  "keygen_s": 0.009,
+  "encrypt_s": 0.091,
+  "upload_MB_per_batch": 7.2,
+  "server_compute_s_per_batch": 0.0094,
+  "server_us_per_record": 2.3,
+  "decrypt_s": 0.0006,
+  "plaintext_baseline_s": 2.8e-05,
+  "overhead_multiplier_vs_plaintext": 332,
+  "usd_per_1M_records_scored": 3.2e-05,
+  "max_abs_prob_error": 4.281106552594949e-08
+}

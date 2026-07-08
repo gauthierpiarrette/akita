@@ -1,0 +1,46 @@
+{
+  "notes": 400,
+  "embedder": "all-MiniLM-L6-v2 (384-dim, runs client-side)",
+  "open_s_keygen": 0.13,
+  "add_s_total": 0.8,
+  "add_ms_per_note": 2.0,
+  "median_search_e2e_s": 0.239,
+  "median_server_compute_s": 0.1446,
+  "planner_estimate_server_s": 0.145,
+  "public_context_mb_one_time": 1.88,
+  "server_storage_mb": 18.6,
+  "kb_per_memory_at_rest": 45.5,
+  "delete_effective_immediately": true,
+  "searches": [
+    {
+      "query": "what medication changes has my doctor made?",
+      "e2e_s": 0.266,
+      "server_s": 0.1494,
+      "top": "dr chen increased the propranolol dose to 40mg after the last episode"
+    },
+    {
+      "query": "when does the settlement offer expire?",
+      "e2e_s": 0.212,
+      "server_s": 0.1438,
+      "top": "lawyer silva says the settlement offer of 120k expires on the 9th"
+    },
+    {
+      "query": "what happened with the flagged international wire transfer?",
+      "e2e_s": 0.239,
+      "server_s": 0.1446,
+      "top": "wire of 120k to the dubai account flagged, called the bank"
+    },
+    {
+      "query": "what do I know about the job offers and compensation?",
+      "e2e_s": 0.238,
+      "server_s": 0.1436,
+      "top": "recruiter from meridian called about the staff engineer role, 300k base"
+    },
+    {
+      "query": "what's going on with my mother's health?",
+      "e2e_s": 0.249,
+      "server_s": 0.1513,
+      "top": "mom's memory is getting worse, called the clinic about sertraline"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "workload": "encrypted query vs 16384 docs, dim 128",
+  "keygen_s": 0.114,
+  "encrypt_s": 0.0032,
+  "server_compute_s": 2.603,
+  "decrypt_s": 0.0027,
+  "plaintext_baseline_s": 0.000393,
+  "overhead_multiplier_vs_plaintext": 6628,
+  "docs_per_second_per_core": 6295,
+  "usd_per_1M_docs_searched": 0.0022,
+  "query_ciphertext_KB": 325.7,
+  "server_context_MB_one_time": 33.8,
+  "max_abs_score_error": 5.315247508796972e-08,
+  "top10_agreement": "10/10"
+}

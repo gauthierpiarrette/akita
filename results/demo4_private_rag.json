@@ -1,0 +1,123 @@
+{
+  "corpus": "12288 real docs (20 Newsgroups), MiniLM-L6-v2 384-dim embeddings",
+  "median_end_to_end_s": 2.26,
+  "median_breakdown_s": {
+    "embed_query_local": 0.567,
+    "encrypt": 0.007,
+    "http_roundtrip_incl_server": 1.693,
+    "server_encrypted_compute": 1.683,
+    "decrypt_and_rank_local": 0.004
+  },
+  "median_plaintext_server_s": 0.00115,
+  "server_overhead_vs_plaintext": 1459,
+  "upload_KB_per_query": 326,
+  "download_KB_per_query": 690,
+  "public_context_MB_one_time": 35.5,
+  "top10_exact_across_queries": "80/80",
+  "queries": [
+    {
+      "query": "problems with my graphics card drivers on windows",
+      "total_s": 3.108159456991416,
+      "embed_s": 1.392813082995417,
+      "encrypt_s": 0.004658165998989716,
+      "roundtrip_s": 1.7061695829979726,
+      "server_compute_s": 1.697314291006478,
+      "decrypt_s": 0.004518624999036547,
+      "plaintext_server_s": 0.0026967080048052594,
+      "top10_agreement": 10,
+      "upload_KB": 326.2890625,
+      "download_KB": 689.595703125
+    },
+    {
+      "query": "space shuttle launches and NASA missions",
+      "total_s": 2.7841411659974256,
+      "embed_s": 1.075814707997779,
+      "encrypt_s": 0.003955416003009304,
+      "roundtrip_s": 1.6998145839970675,
+      "server_compute_s": 1.691562874999363,
+      "decrypt_s": 0.0045564579995698296,
+      "plaintext_server_s": 0.001166583999292925,
+      "top10_agreement": 10,
+      "upload_KB": 326.3759765625,
+      "download_KB": 689.625
+    },
+    {
+      "query": "gun control legislation and the second amendment",
+      "total_s": 2.729916834003234,
+      "embed_s": 1.0840362919989275,
+      "encrypt_s": 0.004108458000700921,
+      "roundtrip_s": 1.6374030000006314,
+      "server_compute_s": 1.6292199160016025,
+      "decrypt_s": 0.0043690840029739775,
+      "plaintext_server_s": 0.001144917005149182,
+      "top10_agreement": 10,
+      "upload_KB": 326.591796875,
+      "download_KB": 689.5166015625
+    },
+    {
+      "query": "hockey playoffs and the Stanley Cup",
+      "total_s": 1.745789541004342,
+      "embed_s": 0.05765704100485891,
+      "encrypt_s": 0.010238458002277184,
+      "roundtrip_s": 1.6733284169968101,
+      "server_compute_s": 1.6632874159986386,
+      "decrypt_s": 0.004565625000395812,
+      "plaintext_server_s": 0.0011475409992272034,
+      "top10_agreement": 10,
+      "upload_KB": 326.572265625,
+      "download_KB": 689.4755859375
+    },
+    {
+      "query": "encryption, privacy and the government's clipper chip",
+      "total_s": 2.7336753329946077,
+      "embed_s": 1.1052001249991008,
+      "encrypt_s": 0.0044137499935459346,
+      "roundtrip_s": 1.6196621250055614,
+      "server_compute_s": 1.6113377079964266,
+      "decrypt_s": 0.0043993329963996075,
+      "plaintext_server_s": 0.0013164580013835803,
+      "top10_agreement": 10,
+      "upload_KB": 326.34765625,
+      "download_KB": 689.595703125
+    },
+    {
+      "query": "advice on motorcycle riding and safety gear",
+      "total_s": 1.7866846670003724,
+      "embed_s": 0.05008983299921965,
+      "encrypt_s": 0.011533333999977913,
+      "roundtrip_s": 1.7205624999987776,
+      "server_compute_s": 1.7104591250026715,
+      "decrypt_s": 0.004499000002397224,
+      "plaintext_server_s": 0.0011388749990146607,
+      "top10_agreement": 10,
+      "upload_KB": 326.6025390625,
+      "download_KB": 689.484375
+    },
+    {
+      "query": "medical treatment and clinical studies for chronic disease",
+      "total_s": 1.7619922070080065,
+      "embed_s": 0.04715270800079452,
+      "encrypt_s": 0.009606958003132604,
+      "roundtrip_s": 1.7008808750033495,
+      "server_compute_s": 1.6910067499993602,
+      "decrypt_s": 0.004351666000729892,
+      "plaintext_server_s": 0.0011589999994612299,
+      "top10_agreement": 10,
+      "upload_KB": 326.3212890625,
+      "download_KB": 689.583984375
+    },
+    {
+      "query": "arab israeli conflict and the peace process",
+      "total_s": 1.7483090410096338,
+      "embed_s": 0.04690104100154713,
+      "encrypt_s": 0.011105792000307702,
+      "roundtrip_s": 1.6859073330051615,
+      "server_compute_s": 1.6756359589999192,
+      "decrypt_s": 0.004394875002617482,
+      "plaintext_server_s": 0.001148666997323744,
+      "top10_agreement": 10,
+      "upload_KB": 326.6376953125,
+      "download_KB": 689.548828125
+    }
+  ]
+}

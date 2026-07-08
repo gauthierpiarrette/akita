@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Akita — Private Memory demo</title>
+<style>
+  :root {
+    --page: #f9f9f7; --surface: #fcfcfb; --ink: #0b0b0b; --ink2: #52514e;
+    --muted: #898781; --grid: #e1e0d9; --accent: #1c5cab; --blue: #2a78d6;
+    --good: #0ca30c; --good-ink: #006300; --ring: rgba(11,11,11,.10);
+    --flash: rgba(42,120,214,.14);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --page: #0d0d0d; --surface: #1a1a19; --ink: #fff; --ink2: #c3c2b7;
+      --muted: #898781; --grid: #2c2c2a; --accent: #6da7ec; --blue: #3987e5;
+      --good: #0ca30c; --good-ink: #0ca30c; --ring: rgba(255,255,255,.12);
+      --flash: rgba(57,135,229,.18);
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--page); color: var(--ink);
+    font-family: Charter, "Iowan Old Style", Palatino, Georgia, serif;
+    font-size: 15px; line-height: 1.55;
+  }
+  .disp { font-family: "Avenir Next", Avenir, "Helvetica Neue", system-ui, sans-serif; }
+  .mono { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-variant-numeric: tabular-nums; }
+
+  header {
+    display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+    padding: .9rem 1.4rem; border-bottom: 1px solid var(--ink); flex-wrap: wrap;
+  }
+  .brand { font-family: "Avenir Next", Avenir, system-ui, sans-serif; font-weight: 600; letter-spacing: .02em; }
+  .brand small { color: var(--muted); font-weight: 500; margin-left: .6rem; }
+  .keybadge {
+    display: inline-flex; align-items: center; gap: .45em;
+    font-family: "Avenir Next", Avenir, system-ui, sans-serif; font-size: .8rem; font-weight: 600;
+    border: 1px solid var(--ring); border-radius: 999px; padding: .25em .8em;
+    color: var(--good-ink); background: color-mix(in srgb, var(--good) 10%, transparent);
+  }
+  .keybadge.bad { color: #d03b3b; background: color-mix(in srgb, #d03b3b 10%, transparent); }
+
+  main {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem;
+    max-width: 1180px; margin: 0 auto; padding: 1.2rem 1.4rem 2rem;
+  }
+  @media (max-width: 880px) { main { grid-template-columns: 1fr; } }
+
+  section {
+    background: var(--surface); border: 1px solid var(--ring); border-radius: 10px;
+    padding: 1.1rem 1.2rem; min-width: 0;
+  }
+  .panel-head { display: flex; justify-content: space-between; align-items: baseline; gap: .6rem;
+    border-bottom: 1px solid var(--grid); padding-bottom: .55rem; margin-bottom: .9rem; }
+  .panel-title { font-family: "Avenir Next", Avenir, system-ui, sans-serif; font-weight: 600; font-size: 1rem; }
+  .panel-sub { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: .68rem;
+    text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+
+  .row { display: flex; gap: .5rem; }
+  input[type=text] {
+    flex: 1; min-width: 0; font: inherit; color: var(--ink); background: var(--page);
+    border: 1px solid var(--grid); border-radius: 7px; padding: .5rem .7rem;
+  }
+  input[type=text]:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: transparent; }
+  button {
+    font-family: "Avenir Next", Avenir, system-ui, sans-serif; font-weight: 600; font-size: .85rem;
+    color: var(--page); background: var(--accent); border: 0; border-radius: 7px;
+    padding: .5rem 1rem; cursor: pointer;
+  }
+  button:disabled { opacity: .5; cursor: wait; }
+  button.ghost { color: var(--accent); background: transparent; border: 1px solid var(--grid); }
+
+  .chips { display: flex; flex-wrap: wrap; gap: .4rem; margin: .6rem 0 .2rem; }
+  .chip {
+    font-family: "Avenir Next", Avenir, system-ui, sans-serif; font-size: .75rem;
+    color: var(--ink2); background: transparent; border: 1px solid var(--grid);
+    border-radius: 999px; padding: .22em .75em; cursor: pointer;
+  }
+  .chip:hover { border-color: var(--accent); color: var(--accent); }
+
+  .results { margin: .9rem 0 0; display: flex; flex-direction: column; gap: .5rem; }
+  .result {
+    display: grid; grid-template-columns: 3.6rem 1fr; gap: .7rem; align-items: baseline;
+    border: 1px solid var(--grid); border-radius: 8px; padding: .55rem .75rem;
+  }
+  .score { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: .8rem; color: var(--blue); }
+
+  .timings { display: flex; flex-wrap: wrap; gap: .35rem; margin-top: .8rem; }
+  .t {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: .7rem;
+    color: var(--ink2); border: 1px solid var(--grid); border-radius: 6px; padding: .18em .5em;
+  }
+  .t b { color: var(--ink); font-weight: 600; }
+
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px,1fr)); gap: .5rem; margin-bottom: .9rem; }
+  .stat { border: 1px solid var(--grid); border-radius: 8px; padding: .5rem .65rem; }
+  .stat .v { font-family: "Avenir Next", Avenir, system-ui, sans-serif; font-weight: 600; font-size: 1.05rem; }
+  .stat .l { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: .62rem;
+    text-transform: uppercase; letter-spacing: .07em; color: var(--muted); }
+
+  .subhead { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: .68rem;
+    text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin: 1rem 0 .4rem; }
+  .hexbox { overflow: auto; max-height: 230px; border: 1px solid var(--grid); border-radius: 8px; }
+  table { border-collapse: collapse; width: 100%; font-size: .78rem; }
+  th { position: sticky; top: 0; background: var(--surface);
+    font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: .62rem;
+    text-transform: uppercase; letter-spacing: .07em; color: var(--muted);
+    text-align: left; font-weight: 500; padding: .4rem .6rem; border-bottom: 1px solid var(--grid); }
+  td { padding: .32rem .6rem; border-bottom: 1px solid var(--grid);
+    font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: .72rem; color: var(--ink2);
+    white-space: nowrap; }
+  tr.seen td { background: var(--flash); }
+  tr.new td { background: color-mix(in srgb, var(--good) 12%, transparent); }
+  .note { font-size: .8rem; color: var(--muted); margin-top: .7rem; }
+
+  footer { max-width: 1180px; margin: 0 auto; padding: 0 1.4rem 2.5rem; color: var(--ink2); font-size: .85rem; }
+  footer .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: .8rem; margin-bottom: .8rem; }
+  footer .step b { font-family: "Avenir Next", Avenir, system-ui, sans-serif; }
+  .spin { color: var(--muted); font-size: .8rem; }
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">AKITA<small>Private Memory — live demo, real cryptography</small></div>
+  <div class="keybadge" id="keybadge">…</div>
+</header>
+
+<main>
+  <section>
+    <div class="panel-head">
+      <span class="panel-title">Your device</span>
+      <span class="panel-sub">key holder · embeds &amp; encrypts locally</span>
+    </div>
+
+    <div class="row">
+      <input type="text" id="q" placeholder="Ask your memory anything…">
+      <button id="searchbtn">Search</button>
+    </div>
+    <div class="chips" id="chips"></div>
+    <div class="results" id="results"></div>
+    <div class="timings" id="timings"></div>
+
+    <div class="subhead">add a memory</div>
+    <div class="row">
+      <input type="text" id="newnote" placeholder="e.g. cardiologist wants a stress test before the marathon">
+      <button class="ghost" id="addbtn">Seal &amp; store</button>
+    </div>
+    <div class="note" id="addnote"></div>
+  </section>
+
+  <section>
+    <div class="panel-head">
+      <span class="panel-title">The operator’s view</span>
+      <span class="panel-sub">everything the server can see</span>
+    </div>
+
+    <div class="stats" id="stats"></div>
+
+    <div class="subhead">stored memories (AES blobs)</div>
+    <div class="hexbox">
+      <table id="blobs"><thead><tr><th>id</th><th>bytes</th><th>contents as stored</th></tr></thead><tbody></tbody></table>
+    </div>
+
+    <div class="subhead">embedding segments (CKKS ciphertexts)</div>
+    <div class="hexbox" style="max-height:130px">
+      <table id="segs"><thead><tr><th>seg</th><th>size</th><th>contents as stored</th></tr></thead><tbody></tbody></table>
+    </div>
+
+    <div class="note" id="opnote">After a search, rows the server saw fetched are highlighted —
+      winners and decoys, indistinguishable. The query, scores, and ranking never appear here.</div>
+  </section>
+</main>
+
+<footer>
+  <div class="steps">
+    <div class="step"><b>1 · Embed on-device.</b> The sentence-transformer runs on the key holder’s side; plaintext never leaves.</div>
+    <div class="step"><b>2 · Seal.</b> Text is AES-GCM encrypted; embeddings are CKKS-encrypted (128-bit, hardened params).</div>
+    <div class="step"><b>3 · Blind search.</b> The server multiplies ciphertexts it cannot read — one op per segment, no rotations.</div>
+    <div class="step"><b>4 · Decrypt at the edge.</b> Only the key holder decrypts scores and picks the winners.</div>
+  </div>
+  Honest v0 notes: search download scales with corpus size (~230&nbsp;KB/segment); fetch patterns are padded
+  with decoys pending a PIR stage; key loss means memory loss — that is what “the operator cannot read it” costs.
+</footer>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const SUGGESTIONS = [
+  "what medication changes has my doctor made?",
+  "when does the settlement offer expire?",
+  "what happened with the flagged wire transfer?",
+  "what's going on with my mother's health?",
+];
+let lastFetched = [], lastAdded = null;
+
+function renderChips() {
+  $("chips").innerHTML = "";
+  for (const s of SUGGESTIONS) {
+    const c = document.createElement("button");
+    c.className = "chip"; c.textContent = s;
+    c.onclick = () => { $("q").value = s; doSearch(); };
+    $("chips").appendChild(c);
+  }
+}
+
+function esc(s) { const d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
+
+function renderOperator(op) {
+  const badge = $("keybadge");
+  badge.className = "keybadge" + (op.secret_key_held ? " bad" : "");
+  badge.textContent = op.secret_key_held
+    ? "✕ SECRET KEY ON SERVER" : "✓ secret key held server-side: NO";
+
+  $("stats").innerHTML = `
+    <div class="stat"><div class="v">${op.blobs.length}</div><div class="l">blobs</div></div>
+    <div class="stat"><div class="v">${op.segments.length}</div><div class="l">segments</div></div>
+    <div class="stat"><div class="v">${op.storage_mb} MB</div><div class="l">storage</div></div>
+    <div class="stat"><div class="v">${op.public_context_mb} MB</div><div class="l">public keys</div></div>
+    <div class="stat"><div class="v">${op.blob_fetches_observed}</div><div class="l">fetches seen</div></div>`;
+
+  const btb = $("blobs").querySelector("tbody");
+  btb.innerHTML = op.blobs.map(b => {
+    const cls = b.id === String(lastAdded) ? "new" : (lastFetched.includes(b.id) ? "seen" : "");
+    return `<tr class="${cls}"><td>${esc(b.id)}</td><td>${b.bytes}</td><td>${b.hex}…</td></tr>`;
+  }).join("");
+
+  $("segs").querySelector("tbody").innerHTML = op.segments.map(s =>
+    `<tr><td>${s.segment}</td><td>${s.kb} KB</td><td>${s.hex}…</td></tr>`).join("");
+}
+
+async function doSearch() {
+  const query = $("q").value.trim();
+  if (!query) return;
+  $("searchbtn").disabled = true;
+  $("results").innerHTML = `<span class="spin">encrypting query, searching blind…</span>`;
+  $("timings").innerHTML = "";
+  try {
+    const r = await fetch("/api/search", { method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query }) });
+    const d = await r.json();
+    lastFetched = d.trace.fetched_ids; lastAdded = null;
+    $("results").innerHTML = d.results.map(x =>
+      `<div class="result"><span class="score">+${x.score.toFixed(3)}</span><span>${esc(x.text)}</span></div>`
+    ).join("") || "no results";
+    const t = d.trace;
+    $("timings").innerHTML = [
+      `embed <b>${t.embed_ms} ms</b>`,
+      `encrypt <b>${t.encrypt_ms} ms</b>`,
+      `server (blind) <b>${t.server_ms} ms</b>`,
+      `decrypt+rank <b>${t.decrypt_ms} ms</b>`,
+      `query ct <b>${t.query_ct_kb} KB</b> · ${t.query_ct_hex}…`,
+      `download <b>${t.download_kb} KB</b> / ${t.segments} segs`,
+      `end-to-end <b>${d.e2e_ms} ms</b>`,
+    ].map(x => `<span class="t">${x}</span>`).join("");
+    renderOperator(d.operator);
+  } finally { $("searchbtn").disabled = false; }
+}
+
+async function doAdd() {
+  const text = $("newnote").value.trim();
+  if (!text) return;
+  $("addbtn").disabled = true;
+  try {
+    const r = await fetch("/api/add", { method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text }) });
+    const d = await r.json();
+    lastAdded = d.id; lastFetched = [];
+    $("addnote").textContent =
+      `sealed & stored as blob ${d.id} in ${d.add_ms} ms — find it on the right: it's the green hex row.`;
+    $("newnote").value = "";
+    renderOperator(d.operator);
+  } finally { $("addbtn").disabled = false; }
+}
+
+$("searchbtn").onclick = doSearch;
+$("q").addEventListener("keydown", e => { if (e.key === "Enter") doSearch(); });
+$("addbtn").onclick = doAdd;
+$("newnote").addEventListener("keydown", e => { if (e.key === "Enter") doAdd(); });
+
+renderChips();
+fetch("/api/operator").then(r => r.json()).then(renderOperator);
+</script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+.DS_Store
+demos/private_rag/data/
+.claude/
+.akita_keys/
+notes/
+**/.demo_keys/

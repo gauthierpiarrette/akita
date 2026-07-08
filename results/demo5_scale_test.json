@@ -1,0 +1,14 @@
+{
+  "corpus_docs": 102400,
+  "chunks": 25,
+  "median_query_latency_s_laptop": 14.0,
+  "docs_per_second_whole_laptop": 7315,
+  "docs_per_core_second_upper_bound_cost": 731,
+  "usd_per_query_100k_docs": 0.00194,
+  "derived_1M_docs": {
+    "usd_per_query": 0.019,
+    "latency_s_on_64_core_server": 21.4,
+    "note": "chunks are independent; latency divides by cores/machines"
+  },
+  "setup_s_one_time": 1.2
+}

@@ -1,0 +1,19 @@
+[project]
+name = "akita-fhe"
+version = "0.1.0"
+description = "Encrypted memory and search for AI apps, plus a planner that validates and costs encrypted computation before running it"
+readme = "README.md"
+requires-python = ">=3.10,<3.13"
+license = { text = "Apache-2.0" }
+dependencies = ["tenseal>=0.3.14", "numpy>=1.26", "cryptography>=42"]
+
+[project.optional-dependencies]
+demos = ["concrete-python", "sentence-transformers", "scikit-learn", "flask", "requests"]
+dev = ["pytest"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["akita"]

@@ -1,0 +1,10 @@
+{
+  "workload": "AML rule on encrypted transaction (2 comparisons + AND/OR)",
+  "compile_s": 0.99,
+  "keygen_s": 1.91,
+  "eval_s_per_transaction": 11.317,
+  "plaintext_baseline_ns": 59,
+  "overhead_multiplier_vs_plaintext": 192136346,
+  "all_decisions_exact": true,
+  "note": "TFHE cost is per-decision, ~8 orders above plaintext on a CPU core; use it only at the decision points, CKKS everywhere else."
+}
