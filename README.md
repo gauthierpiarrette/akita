@@ -4,7 +4,7 @@
 
 Akita gives AI apps **per-user memory and search that the operator provably
 cannot read**: text sealed with AES-GCM, embeddings encrypted with CKKS,
-keys that never leave the user's side — and recall fast enough to use
+keys that never leave the user's side — and search fast enough to use
 (**~95 ms warm end-to-end**, measured, results identical to plaintext
 search).
 
