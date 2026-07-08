@@ -50,7 +50,7 @@ sympy==1.14.0
 tenseal==0.3.16
 threadpoolctl==3.6.0
 tokenizers==0.22.2
-torch==2.12.1
+torch==2.13.0
 tqdm==4.68.4
 transformers==5.13.0
 typer==0.26.8
