@@ -44,7 +44,9 @@ class MiniLMEmbedder:
         from sentence_transformers import SentenceTransformer
 
         self._model = SentenceTransformer(model_name)
-        self.dim = self._model.get_sentence_embedding_dimension()
+        get_dim = getattr(self._model, "get_embedding_dimension", None) \
+            or self._model.get_sentence_embedding_dimension
+        self.dim = get_dim()
 
     def encode(self, texts: list[str]) -> np.ndarray:
         return self._model.encode(

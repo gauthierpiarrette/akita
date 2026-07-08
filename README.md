@@ -1,12 +1,12 @@
-# Akita — computing on data no one is allowed to see
+# Akita — memory your AI can use, that you can't read
 
 ![tests](https://github.com/gauthierpiarrette/akita/actions/workflows/tests.yml/badge.svg)
 
-Memory your AI can use — that you can't read. Akita gives AI apps
-**per-user memory and search the operator provably cannot read**: text
-sealed with AES-GCM, embeddings encrypted with CKKS, keys that never
-leave the user's side — and search fast enough to ship (**~95 ms warm
-end-to-end**, measured, results identical to plaintext search).
+Akita gives AI apps **per-user memory and search the operator provably
+cannot read**: text sealed with AES-GCM, embeddings encrypted with CKKS,
+keys that never leave the user's side — and search fast enough to ship
+(**~95 ms warm end-to-end**, measured, results identical to plaintext
+search).
 
 ![Akita demo: your device on the left, the operator's provably-blind view on the right](docs/demo.gif)
 
@@ -26,9 +26,10 @@ pip install akita-fhe sentence-transformers
 from akita import Memory, MemoryServer, MiniLMEmbedder
 
 server = MemoryServer()                      # the blind side
-mem = Memory.open("user1", passphrase, server, MiniLMEmbedder())
+mem = Memory.open("user1", "a-passphrase-only-the-user-knows", server, MiniLMEmbedder())
 mem.add(["dr chen increased the propranolol dose to 80mg"])
 mem.search("what medication changes has my doctor made?", k=3)
+# -> [{'id': 0, 'score': 0.54, 'text': 'dr chen increased the propranolol dose to 80mg', ...}]
 ```
 
 The trust boundary: text is embedded **on the key holder's side**, sealed
@@ -139,8 +140,9 @@ deployments. The full reasoning with sources: [`docs/why.md`](docs/why.md).
   inference path accordingly and say so in your own privacy policy.
 - **Parameters**: all CKKS contexts use N=8192 with ≤200-bit total
   coefficient modulus — within the 218-bit cap for 128-bit security in the
-  homomorphicencryption.org standard. TFHE (Concrete) uses its defaults
-  (p_fail ≤ 2⁻¹²⁸-class, post-2024 hardened).
+  homomorphicencryption.org standard. TFHE (Concrete) runs on its default
+  parameter selection; we don't override its failure-probability target,
+  so treat it as Concrete's default rather than a bound we claim.
 - **IND-CPA-D / result disclosure**: CKKS is approximate. Decrypted
   results are safe to use *by the key holder*; revealing them to other
   parties (including the server) enables key-recovery-style attacks
