@@ -1,5 +1,7 @@
 # Akita — computing on data no one is allowed to see
 
+![tests](https://github.com/gauthierpiarrette/akita/actions/workflows/tests.yml/badge.svg)
+
 The "100,000× overhead" of fully homomorphic encryption is a choice, not a
 constant. This repo demonstrates it four ways:
 
