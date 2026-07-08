@@ -2,11 +2,11 @@
 
 ![tests](https://github.com/gauthierpiarrette/akita/actions/workflows/tests.yml/badge.svg)
 
-Akita gives AI apps **per-user memory and search that the operator provably
-cannot read**: text sealed with AES-GCM, embeddings encrypted with CKKS,
-keys that never leave the user's side — and search fast enough to use
-(**~95 ms warm end-to-end**, measured, results identical to plaintext
-search).
+Memory your AI can use — that you can't read. Akita gives AI apps
+**per-user memory and search the operator provably cannot read**: text
+sealed with AES-GCM, embeddings encrypted with CKKS, keys that never
+leave the user's side — and search fast enough to ship (**~95 ms warm
+end-to-end**, measured, results identical to plaintext search).
 
 ![Akita demo: your device on the left, the operator's provably-blind view on the right](docs/demo.gif)
 

@@ -52,11 +52,16 @@
     font-family: "Avenir Next", Avenir, system-ui, sans-serif; font-size: .9rem; }
   header nav a:hover { color: var(--accent); }
 
+  .kicker {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: .8rem; text-transform: uppercase; letter-spacing: .12em;
+    color: var(--muted); margin: 2.6rem 0 0;
+  }
   h1 {
     font-family: "Avenir Next", Avenir, "Helvetica Neue", system-ui, sans-serif;
     font-size: clamp(2rem, 5.5vw, 3.1rem); font-weight: 600;
     line-height: 1.1; letter-spacing: -0.015em; text-wrap: balance;
-    margin: 2.6rem 0 1rem;
+    margin: .7rem 0 1rem;
   }
   .lede { font-size: 1.16rem; color: var(--ink2); max-width: 42rem; margin: 0 0 1.6rem; }
   .lede strong { color: var(--ink); }
@@ -77,9 +82,13 @@
 
   .status {
     font-family: "Avenir Next", Avenir, system-ui, sans-serif; font-size: .85rem;
-    color: var(--ink2); margin-bottom: 2rem;
+    color: var(--ink2); margin-bottom: .5rem;
   }
   .status b { color: var(--ink); }
+  .forwho {
+    font-family: "Avenir Next", Avenir, system-ui, sans-serif; font-size: .9rem;
+    color: var(--muted); margin: 0 0 2rem;
+  }
 
   .shot { margin: 0 0 2.6rem; }
   .shot img {
@@ -125,12 +134,14 @@
     </nav>
   </header>
 
-  <h1>Computing on data no one is allowed to see.</h1>
+  <p class="kicker">Computing on data no one is allowed to see</p>
+  <h1>Memory your AI can use —<br>that you can't read.</h1>
   <p class="lede">
-    Akita gives AI apps <strong>per-user memory and search the operator
-    provably cannot read</strong> — text sealed with AES-GCM, embeddings
-    encrypted with CKKS, keys that never leave the user's side. Search is
-    fast enough to use, and every number below was measured, not promised.
+    Per-user memory and search for AI apps, encrypted so the operator —
+    you, your cloud, or us — is <strong>provably locked out</strong>. Text
+    is sealed with AES-GCM and embeddings with CKKS; keys never leave the
+    user's side. Fast enough to ship, and every number below was measured,
+    not promised.
   </p>
 
   <div class="cta">
@@ -139,6 +150,7 @@
     <code class="pipbox"><span>$</span> pip install akita-fhe</code>
   </div>
   <p class="status"><b>v0.1 prototype</b> · real cryptography · honest measurements · not audited — don't protect production data with it yet.</p>
+  <p class="forwho">For AI apps holding sensitive user data — journaling, health, coaching, companions, legal, finance.</p>
 
   <figure class="shot">
     <img src="demo.gif" alt="Akita demo: on the left, a user searches their memories in natural language; on the right, the operator's view shows only hex-opaque ciphertext and a badge reading 'secret key held server-side: NO'.">
