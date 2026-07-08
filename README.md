@@ -130,6 +130,13 @@ deployments. The full reasoning with sources: [`docs/why.md`](docs/why.md).
 
 ## Security notes & limitations — read before relying on this
 
+- **The privacy boundary ends where the prompt begins.** Akita protects
+  memory *storage and search*: the operator cannot read stored memories,
+  queries, scores, or rankings. But once your app decrypts retrieved
+  memories and inserts them into an LLM prompt, their privacy depends on
+  where inference runs — a local model, your own VPC, or a third-party
+  API. Akita cannot protect what your app sends elsewhere; design your
+  inference path accordingly and say so in your own privacy policy.
 - **Parameters**: all CKKS contexts use N=8192 with ≤200-bit total
   coefficient modulus — within the 218-bit cap for 128-bit security in the
   homomorphicencryption.org standard. TFHE (Concrete) uses its defaults
