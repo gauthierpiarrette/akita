@@ -9,3 +9,4 @@ demos/private_rag/data/
 .akita_keys/
 notes/
 **/.demo_keys/
+dist/
