@@ -8,7 +8,9 @@ keys that never leave the user's side — and recall fast enough to use
 (**~95 ms warm end-to-end**, measured, results identical to plaintext
 search).
 
-<!-- demo GIF goes here: demos/demo_page split-screen -->
+![Akita demo: your device on the left, the operator's provably-blind view on the right](docs/demo.gif)
+
+*(Live version: `.venv/bin/python demos/demo_page/app.py` — real cryptography, no mocks.)*
 
 **Status**: v0.1 prototype. Real cryptography, honest measurements,
 **not audited** — don't protect production data with it yet
