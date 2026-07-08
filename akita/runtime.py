@@ -28,7 +28,8 @@ def _contexts(plan: Plan, n_threads: int | None):
     if plan.needs_galois_keys:
         ctx.generate_galois_keys()
     server = ts.context_from(ctx.serialize(save_secret_key=False), **kwargs)
-    assert not server.is_private(), "server context must hold no secret key"
+    if server.is_private():
+        raise RuntimeError("server context must hold no secret key")
     return ctx, server
 
 

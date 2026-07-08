@@ -1,6 +1,6 @@
 [project]
 name = "akita-fhe"
-version = "0.1.0"
+version = "0.2.0"
 description = "Encrypted memory and search for AI apps, plus a planner that validates and costs encrypted computation before running it"
 readme = "README.md"
 requires-python = ">=3.10,<3.13"

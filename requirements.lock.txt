@@ -1,4 +1,4 @@
--e file:///Users/gauthierpiarrette/Documents/projects/encryptic
+# akita-fhe itself: install from this checkout with `pip install -e ".[demos,dev]"`
 annotated-doc==0.0.4
 anyio==4.14.1
 blinker==1.9.0

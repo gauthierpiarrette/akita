@@ -48,13 +48,18 @@ STATE = {"ctx": None}
 @app.post("/setup")
 def setup():
     ctx = ts.context_from(request.get_data())
-    assert not ctx.is_private(), "refusing a context that contains a secret key"
+    if ctx.is_private():
+        return jsonify(
+            {"error": "refusing a context that contains a secret key"}
+        ), 400
     STATE["ctx"] = ctx
     return jsonify({"ok": True, "docs": N, "dim": DIM})
 
 
 @app.post("/search")
 def search():
+    if STATE["ctx"] is None:
+        return jsonify({"error": "no public context: call /setup first"}), 400
     enc_query = ts.ckks_vector_from(STATE["ctx"], request.get_data())
     t0 = time.perf_counter()
     enc_chunks = [enc_query.matmul(m) for m in MATRICES]

@@ -33,12 +33,14 @@ mem.search("what medication changes has my doctor made?", k=3)
 ```
 
 The trust boundary: text is embedded **on the key holder's side**, sealed
-with AES-GCM, and its embeddings are CKKS-encrypted before anything
-leaves. The server stores blobs it cannot open and answers searches with
-one ciphertext×ciphertext multiply per packed segment — it never sees the
-query, the scores, or the ranking, and it asserts at enrollment that the
-context it holds contains no secret key. `mem.audit()` returns the proof;
-`mem.wipe()` is crypto-shredding.
+with AES-GCM (each blob bound to its id, the index to a rollback counter,
+so substituted or rolled-back server data fails closed), and its
+embeddings are CKKS-encrypted before anything leaves. The server stores
+blobs it cannot open and answers searches with one ciphertext×ciphertext
+multiply per packed segment — it never sees the query, the scores, or the
+ranking, and it refuses enrollment of any context containing a secret
+key. `mem.audit()` fetches what the server holds and verifies client-side
+that it cannot decrypt; `mem.wipe()` is crypto-shredding.
 
 **See both sides live**: `.venv/bin/python demos/demo_page/app.py` →
 http://127.0.0.1:8642 — your device on the left (ask anything), the
