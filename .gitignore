@@ -8,5 +8,6 @@ demos/private_rag/data/
 .claude/
 .akita_keys/
 notes/
+launch/
 **/.demo_keys/
 dist/
