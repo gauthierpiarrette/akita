@@ -127,6 +127,22 @@
     color: var(--ink2); font-size: .95rem; margin-bottom: 2.8rem; max-width: 46rem;
   }
 
+  #cloud { border-top: 1px solid var(--grid); padding-top: 2.4rem; margin-bottom: 3rem; }
+  #cloud p { color: var(--ink2); font-size: .98rem; max-width: 44rem; margin: 0 0 .4rem; }
+  #cloud p strong { color: var(--ink); }
+  .wl-form { display: flex; gap: .6rem; flex-wrap: wrap; margin: 1.2rem 0 .5rem; max-width: 40rem; }
+  .wl-form input {
+    flex: 1 1 13rem; font: inherit; font-size: .95rem; color: var(--ink);
+    background: var(--surface); border: 1px solid var(--ring);
+    border-radius: 8px; padding: .55rem .9rem;
+  }
+  .wl-form input::placeholder { color: var(--muted); }
+  .wl-form input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .wl-form .btn { border: 0; cursor: pointer; }
+  .wl-note { font-family: "Avenir Next", Avenir, system-ui, sans-serif;
+    font-size: .8rem; color: var(--muted); }
+  .wl-note.ok { color: var(--good-ink); }
+
   footer { border-top: 1px solid var(--grid); padding: 1.4rem 0 3rem;
     color: var(--muted); font-size: .85rem; }
   footer a { color: var(--accent); }
@@ -140,6 +156,7 @@
       <a href="https://github.com/gauthierpiarrette/akita">GitHub</a>
       <a href="https://pypi.org/project/akita-fhe/">PyPI</a>
       <a href="https://github.com/gauthierpiarrette/akita/blob/main/docs/why.md">Why it works</a>
+      <a href="#cloud">Cloud</a>
     </nav>
   </header>
 
@@ -160,8 +177,9 @@
       <span aria-hidden="true">$</span> pip install akita-fhe
       <span class="copyhint" id="pip-hint" aria-hidden="true">copy</span>
     </button>
+    <a class="btn ghost" href="#cloud">Hosted? Join the waitlist</a>
   </div>
-  <p class="status"><b>v0.1 prototype</b> · real cryptography · honest measurements · not audited — don't protect production data with it yet.</p>
+  <p class="status"><b>v0.2 prototype</b> · real cryptography · honest measurements · tamper-evident, client-verified audit · not audited independently — don't protect production data with it yet.</p>
   <p class="forwho">For AI apps holding sensitive user data — journaling, health, coaching, companions, legal, finance.</p>
 
   <figure class="shot">
@@ -193,6 +211,23 @@
     decoys pending a PIR stage; key loss means memory loss. Full caveats in
     the <a href="https://github.com/gauthierpiarrette/akita#security-notes--limitations--read-before-relying-on-this">security notes</a>.
   </div>
+
+  <section id="cloud">
+    <h2>Akita Cloud — early access</h2>
+    <p>
+      The hosted version: <strong>we run the blind server, you keep the
+      guarantee.</strong> Your users' memory lives on infrastructure that
+      provably cannot read it — no plaintext breach surface, nothing to
+      hand over, and deletion is crypto-shredding. Self-hosting stays free
+      and open source, forever.
+    </p>
+    <form class="wl-form" id="wl" action="https://formspree.io/f/FORM_ID" method="POST">
+      <input type="email" name="email" required placeholder="you@company.com" aria-label="Work email">
+      <input type="text" name="building" placeholder="What are you building? (optional)" aria-label="What are you building (optional)">
+      <button class="btn" type="submit">Request early access</button>
+    </form>
+    <p class="wl-note" id="wl-note">One email when early access opens. Nothing else, no list-selling.</p>
+  </section>
 
   <footer>
     Apache-2.0 ·
@@ -230,6 +265,42 @@
         try { document.execCommand("copy"); done(); } catch (e) {}
         document.body.removeChild(t);
       }
+    });
+  })();
+
+  (function () {
+    var form = document.getElementById("wl");
+    var note = document.getElementById("wl-note");
+    if (!form) return;
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var email = form.elements.email.value.trim();
+      var building = form.elements.building.value.trim();
+      // Until a form backend id is configured, fall back to a prefilled email.
+      if (form.action.indexOf("FORM_ID") !== -1) {
+        var body = "Please add me to the Akita Cloud early-access list.\n\n" +
+          "Email: " + email + (building ? "\nBuilding: " + building : "");
+        location.href = "mailto:gauthierpiarrette@gmail.com" +
+          "?subject=" + encodeURIComponent("Akita Cloud early access") +
+          "&body=" + encodeURIComponent(body);
+        return;
+      }
+      var btn = form.querySelector("button");
+      btn.disabled = true;
+      fetch(form.action, {
+        method: "POST",
+        headers: { "Accept": "application/json" },
+        body: new FormData(form)
+      }).then(function (r) {
+        if (!r.ok) throw new Error();
+        note.textContent = "You're on the list — thank you.";
+        note.classList.add("ok");
+        form.reset();
+      }).catch(function () {
+        note.textContent = "That didn't go through — please email gauthierpiarrette@gmail.com instead.";
+      }).finally(function () {
+        btn.disabled = false;
+      });
     });
   })();
 </script>

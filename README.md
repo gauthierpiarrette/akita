@@ -12,9 +12,11 @@ search).
 
 *(Live version: `.venv/bin/python demos/demo_page/app.py` — real cryptography, no mocks.)*
 
-**Status**: v0.1 prototype. Real cryptography, honest measurements,
+**Status**: v0.2 prototype. Real cryptography, honest measurements,
 **not audited** — don't protect production data with it yet
-([SECURITY.md](SECURITY.md)).
+([SECURITY.md](SECURITY.md)). v0.2 hardened the trust path: tamper-evident
+storage, client-verified audit, stronger key protection
+([CHANGELOG.md](CHANGELOG.md)).
 
 ## Install
 
@@ -58,7 +60,7 @@ indistinguishable). Real cryptography, no mocks.
 | Storage at rest | 45.5 KB/memory |
 | One-time enrollment (public keys) | 1.9 MB |
 | Delete | tombstone immediate; `compact()` re-packs physically |
-| Operator's view | no secret key (asserted + auditable), hex-opaque blobs and segments |
+| Operator's view | no secret key (client-verified by `audit()`), hex-opaque blobs and segments |
 
 Honest v0 costs, stated plainly: the search download scales with corpus
 size (~230 KB per 8-memory segment — server-side aggregation is the
@@ -166,8 +168,9 @@ deployments. The full reasoning with sources: [`docs/why.md`](docs/why.md).
 
 - `akita/` — the SDK: `memory.py` (encrypted per-user memory),
   `planner.py`, `runtime.py`, `embedder.py`
-- `tests/` — 16 tests incl. exactness-vs-plaintext, server blindness,
-  the silent-corruption reproduction, and cost-model validation
+- `tests/` — 23 tests incl. exactness-vs-plaintext, server blindness,
+  tamper/rollback detection, the silent-corruption reproduction, and
+  cost-model validation
 - `demos/demo_page/` — the live split-screen demo
 - `demos/demo6_private_memory.py` — Private Memory measured end to end
 - `demos/private_rag/` — private search engine over HTTP + scale test
